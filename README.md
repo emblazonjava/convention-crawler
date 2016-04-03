@@ -48,7 +48,7 @@ Convention Files are named `<framework>.convention` and live in the `conventions
 of this project. Convention filenames are the lowerCamelCase form of the framework they describe. See the table in
 [Identifying your framework](#identifying-your-framework) for examples.
 
-As example, the [RetroBrowser convention file](../blob/master/conventions/retroBrowser.convention),
+As example, the [RetroBrowser convention file](../../blob/master/conventions/retroBrowser.convention),
 `retroBrowser.convention`, is shown here, with comments:
 
 ```
