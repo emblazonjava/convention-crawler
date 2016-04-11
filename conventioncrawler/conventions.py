@@ -20,3 +20,5 @@ def init():
         parsed_conventions[supported_convention] = helper.parseConvention(supported_convention_filename)
 
     return parsed_conventions
+
+

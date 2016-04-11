@@ -1,0 +1,18 @@
+structure {
+    app_dir: <app_dir>
+    controllers_dir: controllers
+}
+
+controller {
+    <controller_name>Controller.py
+}
+
+action {
+    def <action_name> (<A-Za-z0-9_,>) {
+}
+
+endpoint {
+    controller_style: UpperCamelCase
+    endpoint_style: lowerCamelCase
+    endpoint: <controller_name>/<action_name>
+}

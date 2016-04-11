@@ -11,6 +11,22 @@ It can be used as a command line util to generate a file containing the list of 
 names along with their public actions, or added as a package to another Python app to generate that data as a
 List of Strings.
 
+#Installation
+
+This is a Python 3 application and requires version 3.2 or greater.
+
+This package can be installed with pip, which comes along with Python 3.4 and above. If downloading from this 
+repository, you will need to build the distribution and then install it locally:
+
+`python3 setup.py sdist --formats=zip`
+
+This will create a `dist` folder in the base directory and in it you will find a file called `ConventionCrawler-0.1.zip`.
+
+Copy `ConventionCrawler-0.1.zip` to a temporary location where you can unzip it. The unzipped folder still needs
+to be installed. To install, make sure you are in the directory containing `ConventionCrawler-0.1.zip` and execute:
+
+`pip3 install -e ConventionCrawler-0.1`
+
 #Example Usage
 
 ###Web-app Security
