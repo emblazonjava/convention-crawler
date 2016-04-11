@@ -71,21 +71,21 @@ As example, the [RetroBrowser convention file](../../blob/master/conventions/ret
 // variable names are in angle brackets, < >
 // variable names are valid python variable names
 // variables are placeholders. they are keywords. variable names are not freely chosen
-**structure** {
+structure {
     app_dir: <app_dir>
     controllers_dir: controllers
 }
 
-**controller** {
+controller {
     <controller_name>Controller.py
 }
 
-**action** {
+action {
     def <action_name> (self<A-Za-z0-9_,>):
 }
 
 // All the keywords are valid python variable names
-**endpoint** {
+endpoint {
     controller_style: UpperCamelCase
     endpoint_style: lowerCamelCase
     endpoint: <controller_name>/<action_name>
