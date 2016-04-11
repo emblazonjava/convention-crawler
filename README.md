@@ -70,7 +70,7 @@ As example, the [RetroBrowser convention file](../../blob/master/conventions/ret
 ```
 // variable names are in angle brackets, < >
 // variable names are valid python variable names
-// variables are placeholders. they are keywords. variable names are not freely chosen
+// variables are placeholders. They are keywords. Variable names are not freely chosen.
 structure {
     app_dir: <app_dir>
     controllers_dir: controllers
