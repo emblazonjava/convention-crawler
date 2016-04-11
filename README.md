@@ -68,20 +68,28 @@ As example, the [RetroBrowser convention file](../../blob/master/conventions/ret
 `retroBrowser.convention`, is shown here, with comments:
 
 ```
-**structure:**
-// Use the Groovy GString style for variables
+// variable names are in angle brackets, < >
 // variable names are valid python variable names
 // variables are placeholders. they are keywords. variable names are not freely chosen
-    ${app_dir}
-        controllers
+**structure** {
+    app_dir: <app_dir>
+    controllers_dir: controllers
+}
 
-**controllers:**
-    ${controller_name}Controller.py
+**controller** {
+    <controller_name>Controller.py
+}
+
+**action** {
+    def <action_name> (self<A-Za-z0-9_,>):
+}
 
 // All the keywords are valid python variable names
-**controller_to_endpoint-mapping:**
-    controller: UpperCamelCase
-    endpoint: lowerCamelCase
+**endpoint** {
+    controller_style: UpperCamelCase
+    endpoint_style: lowerCamelCase
+    endpoint: <controller_name>/<action_name>
+}
 
 // Possible cases are:
 // UpperCamelCase
