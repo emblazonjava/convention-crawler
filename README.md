@@ -1,4 +1,6 @@
-_ConventionCrawler is currently under development. It is not yet to a functional stage._
+_ConventionCrawler is currently under development._
+
+_Status: Convention Grammar is working. Unit tests implemented and passing._
 
 #Introduction
 
