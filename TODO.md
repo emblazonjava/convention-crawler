@@ -1,4 +1,4 @@
-TODO:
+##TODO
 
 * Write integration tests for lexical analysis
 * Define and implement Intermediate Representation
