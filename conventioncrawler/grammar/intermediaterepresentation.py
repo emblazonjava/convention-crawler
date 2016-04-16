@@ -1,4 +1,4 @@
-import modgrammar as m
+#import modgrammar as m
 import conventioncrawler.grammar.conventiongrammar as cg
 
 class ConventionIR:
@@ -13,43 +13,53 @@ class ConventionIR:
         self.endpoint_convention = EndpointConventionIR(self._getTokenizedEndpointConventionGrammar())
 
     def _getTokenizedStructureConventionGrammar(self):
-        return self._getTokenizedConventionSubGrammar(StructureConvention)
+        return _getTokenizedSubConvention(self.tokenized_convention_grammar, cg.StructureConventionGrammar)
 
     def _getTokenizedControllerConventionGrammar(self):
-        return self._getTokenizedConventionSubGrammar(ControllerConvention)
+        return _getTokenizedSubConvention(self.tokenized_convention_grammar, cg.ControllerConventionGrammar)
 
     def _getTokenizedActionConventionGrammar(self):
-        return self._getTokenizedConventionSubGrammar(ActionConvention)
+        return _getTokenizedSubConvention(self.tokenized_convention_grammar, cg.ActionConventionGrammar)
 
     def _getTokenizedEndpointConventionGrammar(self):
-        return self._getTokenizedConventionSubGrammar(EndpointConvention)
-
-    def _getTokenizedSubConvention(self, convention_grammar_class):
-
-        for sub_convention in self.tokenized_convention_grammar:
-
-            # find the right subgrammar
-            if isinstance(sub_convention, convention_grammar_class):
-                break
-            else:
-                sub_convention = None
-
-        if sub_convention == None:
-            # Raise error
-            pass
-
-        return sub_convention
+        return _getTokenizedSubConvention(self.tokenized_convention_grammar, cg.EndpointConventionGrammar)
 
 
 
-class StructureConvention:
+
+
+class StructureConventionIR:
+
+    def __init__(self, structure_convention_grammar):
+
+        self.structure_convention_grammar = structure_convention_grammar
+
+        self.app_dir_convention_ir = self._getAppDirConventionIR()
+        self.controller_dir_convention_ir = self._getControllerDirConventionIR()
+
+    def _getAppDirConventionIR(self):
+
+        return AppDirIR(_getTokenizedSubConvention(self.structure_convention_grammar, cg.AppDirConvention))
+
+
+class ControllerConventionIR:
     pass
 
-class ControllerConvention:
+class ActionConventionIR:
     pass
 
-class ActionConvention:
+class EndpointConventionIR:
     pass
 
-class EndpointConvention:
-    pass
+def _getTokenizedSubConvention(tokenized_convention_grammar, convention_grammar_class):
+
+    found_sub_convention = None
+    for sub_convention in tokenized_convention_grammar:
+
+        # find the right subgrammar
+        # just overwrite any previous
+        # Thus, the final declaration of a sub_convention overrides any previous
+        if isinstance(sub_convention, convention_grammar_class):
+            found_sub_convention = sub_convention
+
+    return found_sub_convention

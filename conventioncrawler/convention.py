@@ -1,9 +1,11 @@
-import conventioncrawler.conventionhandler.conventionshelper as helper
+import conventioncrawler.conventionhelper as helper
 
-# Returns a dictionary of convention configurations
+
+# Returns a dictionary of convention configuration intermediate representations
 def init():
 
     # Get list of filenames that are in the conventions/ directory
+    # ['grails.convention', 'retroBrowser.convention']
     supported_convention_filenames = helper.readSupportedConventionFilenames()
 
     # Construct list of supported conventions
@@ -11,14 +13,18 @@ def init():
     supported_conventions = helper.calculateSupportedConventions(supported_convention_filenames)
 
     # Build parsed_conventions dictionary for return value
-    parsed_conventions = {}
+    convention_IRs = helper.calculateConventionIRs(supported_conventions)
 
     # For each supported convention
     #   parse the file according to the configuration grammar rules
     #   TODO: what to do on error found in grammatical structure of files?
-    for (supported_convention, supported_convention_filename) in supported_conventions:
-        parsed_conventions[supported_convention] = helper.parseConvention(supported_convention_filename)
+    # for (convention, filename) in supported_conventions:
+    #     tokenized_convention = la.tokenize(filename)
+    #     convention_ir = sa.generateIntermediateRepresentation(tokenized_convention)
+    #     parsed_conventions[convention] = convention_ir
 
-    return parsed_conventions
+    return convention_IRs
+
+
 
 
