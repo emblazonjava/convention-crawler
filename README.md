@@ -105,14 +105,14 @@ action {
 
 // All the keywords are valid python variable names
 endpoint {
-    controller_style: UpperCamelCase
-    endpoint_style: lowerCamelCase
+    controller_style: upper_camel_case
+    endpoint_style: lower_camel_case
     endpoint: <controller_name>/<action_name>
 }
 
 // Possible cases are:
-// UpperCamelCase
-// lowerCamelCase
+// upper_camel_case
+// lower_camel_case
 // snake_case
 ```
 
