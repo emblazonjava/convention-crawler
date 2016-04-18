@@ -1,16 +1,16 @@
 ##TODO
 
 * Define and implement Intermediate Representation
-** Implement as Custom Result Objects
-*** Level 1
-**** EndpointConvention
-**** ActionConventionBody
-***** This one is a special case, do it later _(Part of the grammar generator)_
-**** ControllerConventionBody
-***** This one is a special case, do it later _(Part of the grammar generator)_
-**** AppDirConvention
-**** ControllersDirConvention
-** Implement grammar collapsing?
+..* Implement as Custom Result Objects
+....* Level 1
+......* EndpointConvention
+......* ActionConventionBody
+......* This one is a special case, do it later _(Part of the grammar generator)_
+......* ControllerConventionBody
+......* This one is a special case, do it later _(Part of the grammar generator)_
+......* AppDirConvention
+......* ControllersDirConvention
+..* Implement grammar collapsing?
 * Write unit tests for Intermediate Representation
 * Write integration tests for semantic analysis
 * Write functional tests for convention.init
@@ -22,7 +22,7 @@
 
 * Write integration tests for lexical analysis
 * Define and implement Intermediate Representation
-** Implement as Custom Result Objects
-*** Level 1
-**** ControllerStyleConvention
-**** EndpointStyleConvention
+..* Implement as Custom Result Objects
+....* Level 1
+......* ControllerStyleConvention
+......* EndpointStyleConvention
