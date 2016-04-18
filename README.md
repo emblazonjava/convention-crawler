@@ -46,7 +46,7 @@ From within the downloaded repository, run:
 
 ###Web-app Security
 
-[RetroBrowser](https://github.com/allisonf/retro-browser) uses ConventionCrawler as a mechanism to build a 
+[RetroBrowser](https://github.com/allisonf/retro-browser) will use ConventionCrawler as a mechanism to build a 
 whitelist for validating URL endpoints.
 
 #Set of Supported Frameworks
