@@ -33,14 +33,15 @@ def _calculateConventionFromFilename(filename):
     return (filename.rstrip('.convention'), filename)
 
 
-def tokenizeConventions(supported_conventions, app_name):
+def calculateConventionIRs(supported_conventions):
 
-    return {convention: la.tokenize(filename, app_name) for (convention, filename) in supported_conventions}
+    return {convention: _fileToIR(filename) for (convention, filename) in supported_conventions}
 
-def calculateIntermediateRepresentations(tokenized_conventions):
 
-    return {convention: sa.generateIntermediateRepresentation(tokenized_file) for (convention, tokenized_file) in tokenized_conventions}
+# Take a filename and produce the intermediate representation of it's contents
+def _fileToIR(filename):
 
+    return sa.generateIntermediateRepresentation(la.tokenize(filename))
 
 if __name__ == '__main__':
     import doctest

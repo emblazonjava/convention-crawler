@@ -15,6 +15,22 @@ It can be used as a command line util to generate a file containing the list of 
 names along with their public actions, or added as a package to another Python app to generate that data as a
 List of Strings.
 
+#Usage
+
+As a command-line app, ConventionCrawler should be run from within the base of the app it is to crawl.
+
+ConventionCrawler requires one arguments: the convention of your app (e.g., `grails` or `retroBrowser`).
+
+Some conventions, such as the retroBrowser convention, require the application name as a named argument.
+
+Sample Usage:
+
+`conventionCrawler grails`
+
+`conventionCrawler retroBrowser --app_name tictactoe`
+
+`conventionCrawler retroBrowser -a tictactoe`
+
 #Installation
 
 This is a Python 3 application and requires version 3.2 or greater.
@@ -100,3 +116,5 @@ endpoint {
 // lowerCamelCase
 // snake_case
 ```
+
+_Note: The Convention Grammar does not support trailing whitespace at the end of the file._

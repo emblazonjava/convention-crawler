@@ -4,14 +4,10 @@
 import conventioncrawler.grammar.conventiongrammar as cg
 
 
-def tokenize(filename, app_name):
+def tokenize(filename):
 
     file_string = _openAndRead(filename)
-
-    if (app_name):
-        parser = cg.ConventionGrammar.parser({'app_name': app_name})
-    else:
-        parser = cg.ConventionGrammar.parser()
+    parser = cg.ConventionGrammar.parser()
 
     tokenized_file = parser.parse_string(file_string)
 

@@ -66,8 +66,6 @@ class Comma (m.Grammar):
 
     grammar = ","
 
-# Variables
-
 # app_dir
 class AppDirVariableName (m.Grammar):
     """
@@ -442,24 +440,6 @@ class EndpointConvention (m.Grammar):
 
     grammar = (EndpointKeyword, Colon, URLConvention)
 
-    def grammar_elem_init(self, sessiondata):
-
-        url_convention = self[2]
-        self.endpoint_template = [self._create_template_component(sub_grammar) for sub_grammar in url_convention]
-
-
-    def _create_template_component(self, sub_grammar):
-
-        if isinstance(sub_grammar, ControllerNameVariable) or isinstance (sub_grammar, ActionNameVariable):
-
-            return sub_grammar.elements[1].string
-
-        else: # it's a separator literal
-
-            return sub_grammar.string
-
-
-
 # Next Processing phase will ensure one and only one of each
 # controller_style: upper_camel_case
 # endpoint_style: lower_camel_case
@@ -519,19 +499,6 @@ class ConventionGrammar (m.Grammar):
     """
 
     grammar = m.REPEAT(StructureConventionGrammar | ControllerConventionGrammar | ActionConventionGrammar | EndpointConventionGrammar)#, sep=m.BOL)
-
-    def grammar_elem_init(self, sessiondata):
-
-        self.structure_conventions = self._findSubGrammar(StructureConventionGrammar, self)
-        self.controller_conventions = self._findSubGrammar(ControllerConventionGrammar, self)
-        self.action_conventions = self._findSubGrammar(ActionConventionGrammar, self)
-        self.endpoint_conventions = self._findSubGrammar(EndpointConventionGrammar, self)
-
-        self.endpoint_template = self._findSubGrammar(EndpointConvention, self.endpoint_convention).endpoint_template
-
-    def _findSubGrammar(self, sub_grammar_type, grammar):
-
-        return [isinstance(sub_grammar, sub_grammar_type) for sub_grammar in grammar]
 
 
 if __name__ == '__main__':
