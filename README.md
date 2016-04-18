@@ -59,14 +59,18 @@ To add to the set of supported frameworks, just add a new [**Convention File**](
 
 #<a name="identifying-your-framework">Identifying your framework</a>
 
-ConventionCrawler has no default framework that it uses. The conventionCrawler command-line util provides
-a `-convention` flag (short version `-c`).
+ConventionCrawler has no default framework that it uses. The conventionCrawler command-line utility expects
+an argument telling it what convention to use.
 
 Usage
 
-`-convention=<framework name>`
+`conventionCrawler <convention>`
 
-The value of the `-convention` flag should be the first part of the convention file name:
+Sample Usage:
+
+`conventionCrawler grails`
+
+The value for the `<convention>` parameter should be the first part of the convention file name:
 
 | Framework    | flag value   | convention file name    |
 | :----------: | :----------: | :---------------------: |
