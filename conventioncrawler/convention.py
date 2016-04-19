@@ -45,7 +45,7 @@ def generate_endpoints(convention, app_name):
 
 def generate_endpoint(controller_name, action_name, intermediate_representation):
 
-    endpoint_template = intermediate_representation.endpoint_template
+    endpoint_template = intermediate_representation.endpoint.endpoint_template
 
     endpoint_as_list = [_choose_endpoint_component(controller_name, action_name, template_component) for template_component in endpoint_template]
 

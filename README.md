@@ -116,4 +116,4 @@ endpoint {
 // snake_case
 ```
 
-_Note: The Convention Grammar does not support trailing whitespace at the end of the file._
+_Note: The Convention Grammar does not support trailing whitespace at the end of the convention file._
