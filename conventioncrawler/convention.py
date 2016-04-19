@@ -12,10 +12,10 @@ def init(app_name):
     # List of tuples: ('convention name', 'filename')
     supported_conventions = helper.calculateSupportedConventions(supported_convention_filenames)
 
-    tokenized_conventions = helper.tokenizeConventions(supported_conventions, app_name)
+    tokenized_conventions = helper.lexicalAnalysis(supported_conventions, app_name)
 
     # Build parsed_conventions dictionary for return value
-    intermediate_representations = helper.calculateIntermediateRepresentations(tokenized_conventions)
+    intermediate_representations = helper.semanticAnalysis(tokenized_conventions)
 
     # For each supported convention
     #   parse the file according to the configuration grammar rules

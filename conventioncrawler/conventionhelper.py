@@ -33,13 +33,15 @@ def _calculateConventionFromFilename(filename):
     return (filename.rstrip('.convention'), filename)
 
 
-def tokenizeConventions(supported_conventions, app_name):
+def lexicalAnalysis(supported_conventions, app_name):
 
     return {convention: la.tokenize(filename, app_name) for (convention, filename) in supported_conventions}
 
-def calculateIntermediateRepresentations(tokenized_conventions):
+# Call the validation stage
+def semanticAnalysis(tokenized_conventions):
 
-    return {convention: sa.generateIntermediateRepresentation(tokenized_file) for (convention, tokenized_file) in tokenized_conventions}
+    pass
+    #return {convention: sa.generateIntermediateRepresentation(tokenized_file) for (convention, tokenized_file) in tokenized_conventions}
 
 
 if __name__ == '__main__':

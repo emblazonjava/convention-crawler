@@ -1,6 +1,14 @@
 _ConventionCrawler is currently under development._
 
-_Status: Convention Grammar is working. Unit tests implemented and passing. Working on Intermediate Representation_
+_Status: 
+* Convention Grammar is working; Unit tests implemented and passing.
+* Intermediate Representation implemented_
+
+_Next Steps:
+* Intermediate Representation Unit tests
+* Lexical Analysis/Intermediate Representation Integration tests_
+
+
 
 _See [TODO](../../blob/master/TODO.md/) for upcoming features._
 
