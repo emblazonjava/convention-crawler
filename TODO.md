@@ -1,6 +1,5 @@
 ##TODO
 
-* Write unit tests for Intermediate Representation
 * Write lexical analysis/intermediate representation integration tests
 * Write semantic analysis for a validation phase that ensures uniqueness of sub-conventions
 * unit test semantic analysis
@@ -20,3 +19,8 @@
       * ControllerConventionGrammar
       * ActionConventionGrammar
       * EndpointConventionGrammar
+* Write unit tests for Intermediate Representation
+  * StructureConventionGrammar
+  * ControllerConventionGrammar
+  * ActionConventionGrammar
+  * EndpointConventionGrammar

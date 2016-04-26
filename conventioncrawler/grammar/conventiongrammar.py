@@ -148,6 +148,7 @@ class AllowedCharsVariable (m.Grammar):
 
     grammar = (OpenAngleBracket, AllowedChars, CloseAngleBracket)
 
+
 # e.g., controllers
 class DirNameConstant (m.Grammar):
     """
@@ -228,8 +229,11 @@ class ControllersDirKeyword (m.Grammar):
 class AppDirConvention (m.Grammar):
     """
     >>> myparser = AppDirConvention.parser({'app_dir': 'retroBrowser'})
-    >>> myparser.parse_string("app_dir: <app_dir>")
-    AppDirConvention<'app_dir', ':', '<app_dir>'>
+    >>> result = myparser.parse_string("app_dir: <app_dir>")
+    >>> print (result.elements)
+    (AppDirKeyword<'app_dir'>, Colon<':'>, AppDirVariable<'<', 'app_dir', '>'>)
+    >>> print (result.app_dir)
+    retroBrowser
     """
 
     grammar = (AppDirKeyword, Colon, AppDirVariable | DirNameConstant)
@@ -248,8 +252,11 @@ class AppDirConvention (m.Grammar):
 class ControllersDirConvention (m.Grammar):
     """
     >>> myparser = ControllersDirConvention.parser()
-    >>> myparser.parse_string("controllers_dir: controllers")
-    ControllersDirConvention<'controllers_dir', ':', 'controllers'>
+    >>> result = myparser.parse_string("controllers_dir: controllers")
+    >>> print (result.elements)
+    (ControllersDirKeyword<'controllers_dir'>, Colon<':'>, DirNameConstant<'controllers'>)
+    >>> print (result.controllers_dir)
+    controllers
     """
 
     grammar = (ControllersDirKeyword, Colon, DirNameConstant)
@@ -272,7 +279,6 @@ class StructureConventionBody (m.Grammar):
     """
 
     grammar = m.REPEAT(AppDirConvention | ControllersDirConvention)#, sep=m.BOL)
-    #grammar = (AppDirConvention, ControllersDirConvention)
 
 # structure {
 #     app_dir: <app_dir>
@@ -283,8 +289,13 @@ class StructureConventionGrammar (m.Grammar):
     >>> myparser = StructureConventionGrammar.parser({'app_dir': 'retroBrowser'})
     >>> myparser.parse_string("structure {\\napp_dir: <app_dir>\\ncontrollers_dir: controllers\\n}")
     StructureConventionGrammar<'structure', '{', 'app_dir: <app_dir>\\ncontrollers_dir: controllers', '}'>
-    >>> myparser.parse_string("structure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>\\n}")
-    StructureConventionGrammar<'structure', '{', 'controllers_dir: controllers\\napp_dir: <app_dir>', '}'>
+    >>> result = myparser.parse_string("structure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>\\n}")
+    >>> print (result.elements)
+    (StructureKeyword<'structure'>, OpenCurlyBracket<'{'>, StructureConventionBody<'controllers_dir: controllers\\napp_dir: <app_dir>'>, CloseCurlyBracket<'}'>)
+    >>> print (result.app_dir)
+    retroBrowser
+    >>> print (result.controllers_dir)
+    controllers
     """
 
     grammar = (StructureKeyword, OpenCurlyBracket, StructureConventionBody, CloseCurlyBracket)
@@ -310,8 +321,11 @@ class ControllerKeyword (m.Grammar):
 class ControllerConventionBody (m.Grammar):
     """
     >>> myparser = ControllerConventionBody.parser()
-    >>> myparser.parse_string("<controller_name>Controller.py")
-    ControllerConventionBody<'<controller_name>', 'Controller.py'>
+    >>> result = myparser.parse_string("<controller_name>Controller.py")
+    >>> print (result.elements)
+    (ControllerNameVariable<'<', 'controller_name', '>'>, FileNameConstant<'Controller.py'>)
+    >>> print (result.controller_template)
+    ['controller_name', 'Controller.py']
     """
 
     grammar = (ControllerNameVariable, FileNameConstant)
@@ -326,8 +340,11 @@ class ControllerConventionBody (m.Grammar):
 class ControllerConventionGrammar (m.Grammar):
     """
     >>> myparser = ControllerConventionGrammar.parser()
-    >>> myparser.parse_string("controller {\\n<controller_name>Controller.py\\n}")
-    ControllerConventionGrammar<'controller', '{', '<controller_name>Controller.py', '}'>
+    >>> result = myparser.parse_string("controller {\\n<controller_name>Controller.py\\n}")
+    >>> print (result.elements)
+    (ControllerKeyword<'controller'>, OpenCurlyBracket<'{'>, ControllerConventionBody<'<controller_name>', 'Controller.py'>, CloseCurlyBracket<'}'>)
+    >>> print (result.controller_template)
+    ['controller_name', 'Controller.py']
     """
 
     grammar = (ControllerKeyword, OpenCurlyBracket, ControllerConventionBody, CloseCurlyBracket)
@@ -349,35 +366,36 @@ class ActionKeyword (m.Grammar):
     grammar = "action"
 
 # TODO: Want to use REPEAT for a more dynamic function def
-# def <action_name> (self<A-Za-z0-9_,>):
+# def <action_name> (<A-Za-z0-9_,>):
 class ActionConventionBody (m.Grammar):
     """
     >>> myparser = ActionConventionBody.parser()
-    >>> myparser.parse_string("def <action_name> (self<A-Za-z0-9_,>):")
-    ActionConventionBody<'def', '<action_name>', '(', 'self', '<A-Za-z0-9_,>', ')', ':'>
+    >>> result = myparser.parse_string("def <action_name> (<A-Za-z0-9_,>):")
+    >>> print (result.elements)
+    (LanguageKeywordConstant<'def'>, ActionNameVariable<'<', 'action_name', '>'>, Parenthesis<'('>, AllowedCharsVariable<'<', 'A-Za-z0-9_,', '>'>, Parenthesis<')'>, Colon<':'>)
+    >>> print (result.action_grammar)
+    (<Grammar: L('def')>, <Grammar: WORD('A-Za-z0-9_')>, <Grammar: L('(')>, <Grammar: WORD('A-Za-z0-9_,')>, <Grammar: L(')')>, <Grammar: L(':')>)
     """
 
-    grammar = (LanguageKeywordConstant, ActionNameVariable, Parenthesis, m.OPTIONAL(LanguageKeywordConstant), AllowedCharsVariable, Parenthesis, Colon | OpenCurlyBracket)
+    grammar = (LanguageKeywordConstant, ActionNameVariable, Parenthesis, AllowedCharsVariable, Parenthesis, Colon | OpenCurlyBracket)
 
     def grammar_elem_init(self, sessiondata):
 
-        if self.find(LanguageKeywordConstant):
-
-            self.action_grammar = (m.LITERAL(self[0].string), self[1], m.LITERAL(self[2].string), m.LITERAL(self[3].string), self[4], m.LITERAL(self[5].string), m.LITERAL(self[6].string))
-
-        else:
-
-            self.action_grammar = (m.LITERAL(self[0].string), self[1], m.LITERAL(self[2].string), self[3], m.LITERAL(self[4].string), m.LITERAL(self[5].string))
+        allowed_chars_regex = self.get(AllowedCharsVariable)[1].string
+        self.action_grammar = (m.LITERAL(self[0].string), m.WORD("A-Za-z0-9_"), m.LITERAL(self[2].string), m.WORD(allowed_chars_regex), m.LITERAL(self[4].string), m.LITERAL(self[5].string))
 
 
 # action {
-#     def <action_name> (self<A-Za-z0-9_,>):
+#     def <action_name> (<A-Za-z0-9_,>):
 # }
 class ActionConventionGrammar (m.Grammar):
     """
     >>> myparser = ActionConventionGrammar.parser()
-    >>> myparser.parse_string("action {\\ndef <action_name> (self<A-Za-z0-9_,>):\\n}")
-    ActionConventionGrammar<'action', '{', 'def <action_name> (self<A-Za-z0-9_,>):', '}'>
+    >>> result = myparser.parse_string("action {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}")
+    >>> print (result.elements)
+    (ActionKeyword<'action'>, OpenCurlyBracket<'{'>, ActionConventionBody<'def', '<action_name>', '(', '<A-Za-z0-9_,>', ')', ':'>, CloseCurlyBracket<'}'>)
+    >>> print (result.action_grammar)
+    (<Grammar: L('def')>, <Grammar: WORD('A-Za-z0-9_')>, <Grammar: L('(')>, <Grammar: WORD('A-Za-z0-9_,')>, <Grammar: L(')')>, <Grammar: L(':')>)
     """
 
     grammar = (ActionKeyword, OpenCurlyBracket, ActionConventionBody, CloseCurlyBracket)
@@ -429,8 +447,11 @@ class ControllerStyleKeyword (m.Grammar):
 class ControllerStyleConvention (m.Grammar):
     """
     >>> myparser = ControllerStyleConvention.parser()
-    >>> myparser.parse_string("controller_style: snake_case")
-    ControllerStyleConvention<'controller_style', ':', 'snake_case'>
+    >>> result = myparser.parse_string("controller_style: snake_case")
+    >>> print (result.elements)
+    (ControllerStyleKeyword<'controller_style'>, Colon<':'>, L('snake_case')<'snake_case'>)
+    >>> print (result.controller_style)
+    CaseStyle.snake_case
     """
 
     grammar = (ControllerStyleKeyword, Colon, CaseStyle)
@@ -454,8 +475,11 @@ class EndpointStyleKeyword (m.Grammar):
 class EndpointStyleConvention (m.Grammar):
     """
     >>> myparser = EndpointStyleConvention.parser()
-    >>> myparser.parse_string("endpoint_style: lower_camel_case")
-    EndpointStyleConvention<'endpoint_style', ':', 'lower_camel_case'>
+    >>> result = myparser.parse_string("endpoint_style: lower_camel_case")
+    >>> print (result.elements)
+    (EndpointStyleKeyword<'endpoint_style'>, Colon<':'>, L('lower_camel_case')<'lower_camel_case'>)
+    >>> print (result.endpoint_style)
+    CaseStyle.lower_camel_case
     """
 
     grammar = (EndpointStyleKeyword, Colon, CaseStyle)
@@ -479,8 +503,11 @@ class URLConvention (m.Grammar):
 class EndpointConvention (m.Grammar):
     """
     >>> myparser = EndpointConvention.parser()
-    >>> myparser.parse_string("endpoint: <controller_name>/<action_name>")
-    EndpointConvention<'endpoint', ':', '<controller_name>/<action_name>'>
+    >>> result = myparser.parse_string("endpoint: <controller_name>/<action_name>")
+    >>> print (result.elements)
+    (EndpointKeyword<'endpoint'>, Colon<':'>, <LIST><'<controller_name>', '/', '<action_name>'>)
+    >>> print (result.endpoint_template)
+    ['controller_name', '/', 'action_name']
     """
 
     grammar = (EndpointKeyword, Colon, URLConvention)
@@ -518,11 +545,6 @@ class EndpointConventionBody (m.Grammar):
 
     grammar = m.REPEAT(ControllerStyleConvention | EndpointStyleConvention | EndpointConvention)
 
-    def grammar_elem_init(self, sessiondata):
-
-        self.controller_style = self.find(ControllerStyleConvention).controller_style
-        self.endpoint_style = self.find(EndpointStyleConvention).endpoint_style
-        self.endpoint_template = self.find(EndpointConvention).endpoint_template
 
 # endpoint {
 #     controller_style: upper_camel_case
@@ -532,17 +554,24 @@ class EndpointConventionBody (m.Grammar):
 class EndpointConventionGrammar (m.Grammar):
     """
     >>> myparser = EndpointConventionGrammar.parser()
-    >>> myparser.parse_string("endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}")
-    EndpointConventionGrammar<'endpoint', '{', 'controller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>', '}'>
+    >>> result = myparser.parse_string("endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}")
+    >>> print (result.elements)
+    (EndpointKeyword<'endpoint'>, OpenCurlyBracket<'{'>, EndpointConventionBody<'controller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>'>, CloseCurlyBracket<'}'>)
+    >>> print (result.controller_style)
+    CaseStyle.upper_camel_case
+    >>> print (result.endpoint_style)
+    CaseStyle.lower_camel_case
+    >>> print (result.endpoint_template)
+    ['controller_name', '/', 'action_name']
     """
 
     grammar = (EndpointKeyword, OpenCurlyBracket, EndpointConventionBody, CloseCurlyBracket)
 
     def grammar_elem_init(self, sessiondata):
 
-        self.controller_style = self.find(EndpointConventionBody).controller_style
-        self.endpoint_style = self.find(EndpointConventionBody).endpoint_style
-        self.endpoint_template = self.find(EndpointConventionBody).endpoint_template
+        self.controller_style = self.find(ControllerStyleConvention).controller_style
+        self.endpoint_style = self.find(EndpointStyleConvention).endpoint_style
+        self.endpoint_template = self.find(EndpointConvention).endpoint_template
 
 # Because I've used REPEAT, there could be multiple occurrences of each grammar
 # A cleanup phase will have to ensure there is one and only one of each of Structure, Controller, Action, and Endpoint
@@ -556,7 +585,7 @@ class EndpointConventionGrammar (m.Grammar):
 # }
 #
 # action {
-#     def <action_name> (self<A-Za-z0-9_,>):
+#     def <action_name> (<A-Za-z0-9_,>):
 # }
 #
 # endpoint {
@@ -567,10 +596,40 @@ class EndpointConventionGrammar (m.Grammar):
 class ConventionGrammar (m.Grammar):
     """
     >>> myparser = ConventionGrammar.parser({'app_dir': 'retroBrowser'})
-    >>> myparser.parse_string("structure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>}\\n\\ncontroller {\\n<controller_name>Controller.py\\n}\\n\\naction {\\ndef <action_name> (self<A-Za-z0-9_,>):\\n}\\n\\nendpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}").elements
-    (<REPEAT><'structure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>}', 'controller {\\n<controller_name>Controller.py\\n}', 'action {\\ndef <action_name> (self<A-Za-z0-9_,>):\\n}', 'endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}'>,)
-    >>> myparser.parse_string("controller {\\n<controller_name>Controller.py\\n}\\n\\nstructure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>}\\n\\naction {\\ndef <action_name> (self<A-Za-z0-9_,>):\\n}\\n\\nendpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}").elements
-    (<REPEAT><'controller {\\n<controller_name>Controller.py\\n}', 'structure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>}', 'action {\\ndef <action_name> (self<A-Za-z0-9_,>):\\n}', 'endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}'>,)
+    >>> result1 = myparser.parse_string("structure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>}\\n\\ncontroller {\\n<controller_name>Controller.py\\n}\\n\\naction {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}\\n\\nendpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}")
+    >>> print (result1.elements)
+    (<REPEAT><'structure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>}', 'controller {\\n<controller_name>Controller.py\\n}', 'action {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}', 'endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}'>,)
+    >>> print (result1.structure.app_dir)
+    retroBrowser
+    >>> print (result1.structure.controllers_dir)
+    controllers
+    >>> print (result1.controller.controller_template)
+    ['controller_name', 'Controller.py']
+    >>> print (result1.action.action_grammar)
+    (<Grammar: L('def')>, <Grammar: WORD('A-Za-z0-9_')>, <Grammar: L('(')>, <Grammar: WORD('A-Za-z0-9_,')>, <Grammar: L(')')>, <Grammar: L(':')>)
+    >>> print (result1.endpoint.controller_style)
+    CaseStyle.upper_camel_case
+    >>> print (result1.endpoint.endpoint_style)
+    CaseStyle.lower_camel_case
+    >>> print (result1.endpoint.endpoint_template)
+    ['controller_name', '/', 'action_name']
+    >>> result2 = myparser.parse_string("controller {\\n<controller_name>Controller.py\\n}\\n\\nstructure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>}\\n\\naction {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}\\n\\nendpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}")
+    >>> print (result2.elements)
+    (<REPEAT><'controller {\\n<controller_name>Controller.py\\n}', 'structure {\\ncontrollers_dir: controllers\\napp_dir: <app_dir>}', 'action {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}', 'endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}'>,)
+    >>> print (result2.structure.app_dir)
+    retroBrowser
+    >>> print (result2.structure.controllers_dir)
+    controllers
+    >>> print (result2.controller.controller_template)
+    ['controller_name', 'Controller.py']
+    >>> print (result2.action.action_grammar)
+    (<Grammar: L('def')>, <Grammar: WORD('A-Za-z0-9_')>, <Grammar: L('(')>, <Grammar: WORD('A-Za-z0-9_,')>, <Grammar: L(')')>, <Grammar: L(':')>)
+    >>> print (result2.endpoint.controller_style)
+    CaseStyle.upper_camel_case
+    >>> print (result2.endpoint.endpoint_style)
+    CaseStyle.lower_camel_case
+    >>> print (result2.endpoint.endpoint_template)
+    ['controller_name', '/', 'action_name']
     """
 
     grammar = m.REPEAT(StructureConventionGrammar | ControllerConventionGrammar | ActionConventionGrammar | EndpointConventionGrammar)
@@ -581,13 +640,6 @@ class ConventionGrammar (m.Grammar):
         self.controller = self.find(ControllerConventionGrammar)
         self.action = self.find(ActionConventionGrammar)
         self.endpoint = self.find(EndpointConventionGrammar)
-        # self.controller_style =
-        # self.endpoint_style =
-        # self.endpoint_template = self.find(EndpointConvention).endpoint_template
-        # self.app_dir =
-        # self.controller_template =
-        # self.action_grammar =
-
 
 
 if __name__ == '__main__':
@@ -605,7 +657,7 @@ if __name__ == '__main__':
     }
 
     action {
-        def <action_name> (self<A-Za-z0-9_,>):
+        def <action_name> (<A-Za-z0-9_,>):
     }
 
     endpoint {

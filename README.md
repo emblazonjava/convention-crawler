@@ -3,10 +3,11 @@ _ConventionCrawler is currently under development._
 _Status:_
 * _Convention Grammar is working; Unit tests implemented and passing._
 * _Intermediate Representation implemented_
+* _Intermediate Representation Unit tests implemented and passing_
 
 _Next Steps:_
-* _Intermediate Representation Unit tests_
 * _Lexical Analysis/Intermediate Representation Integration tests_
+* _Write semantic analysis for a validation phase that ensures uniqueness of sub-conventions_
 
 
 
@@ -108,7 +109,7 @@ controller {
 }
 
 action {
-    def <action_name> (self<A-Za-z0-9_,>):
+    def <action_name> (<A-Za-z0-9_,>):
 }
 
 // All the keywords are valid python variable names

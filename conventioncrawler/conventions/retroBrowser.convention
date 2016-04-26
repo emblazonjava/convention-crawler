@@ -8,7 +8,7 @@ controller {
 }
 
 action {
-    def <action_name> (self<A-Za-z0-9_,>):
+    def <action_name> (<A-Za-z0-9_,>):
 }
 
 endpoint {
