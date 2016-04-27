@@ -1,5 +1,5 @@
 structure {
-    app_dir: <app_name>
+    app_dir: grails-app
     controllers_dir: controllers
 }
 
@@ -7,8 +7,13 @@ controller {
     <controller_name>Controller.py
 }
 
+structure {
+    app_dir: grails-app
+    controllers_dir: controllers
+}
+
 action {
-    def <action_name> (<A-Za-z0-9_,>):
+    def <action_name> (<A-Za-z0-9_,>) {
 }
 
 endpoint {

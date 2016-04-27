@@ -3,19 +3,22 @@
 
 import conventioncrawler.grammar.conventiongrammar as cg
 
-
-def tokenize(filename, app_name):
+def tokenize(filename, app_name=None):
+    """
+    Generate the Intermediate Representation from a convention file
+    
+    :param filename:
+    :param app_name:
+    :return:
+    """
 
     file_string = _openAndRead(filename)
 
-    if (app_name):
-        parser = cg.ConventionGrammar.parser({'app_name': app_name})
-    else:
-        parser = cg.ConventionGrammar.parser()
+    parser = cg.ConventionGrammar.parser({'app_name': app_name})
 
-    tokenized_file = parser.parse_string(file_string)
+    convention_grammar = parser.parse_string(file_string)
 
-    return tokenized_file
+    return convention_grammar
 
 
 def _openAndRead(filename):

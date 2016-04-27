@@ -22,12 +22,15 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-
     scripts=[
       'bin/conventionCrawler'
     ],
 
     packages=find_packages(exclude=['docs', 'tests']),
+    package_data = {
+        # Include the convention files
+        'conventioncrawler': ['conventions/*.convention']
+    },
 
-   install_requires=["modgrammar"]
+    install_requires=["modgrammar"]
 )

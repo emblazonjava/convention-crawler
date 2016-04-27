@@ -1,13 +1,19 @@
 _ConventionCrawler is currently under development._
 
 _Status:_
-* _Convention Grammar is working; Unit tests implemented and passing._
-* _Intermediate Representation implemented_
-* _Intermediate Representation Unit tests implemented and passing_
+* _Convention Grammar Fully Implemented_
+* _Unit, Integration, and Functional tests implemented for current functionality_
+* _CLI implemented, command-line script working_
+* _Crawls a grails or retroBrowser app to find names of controller files_
+
 
 _Next Steps:_
-* _Lexical Analysis/Intermediate Representation Integration tests_
-* _Write semantic analysis for a validation phase that ensures uniqueness of sub-conventions_
+* _Fix unit/integration tests for controller_name_grammar_
+* _Design functionality to take convention IR to grammar that finds action names_
+  * _parse controller to find actions names_
+* _Design functionality to compute endpoints from controller/action set_
+  * _convert endpoint case style_
+    * _Define grammar that converts different case styles into list of "words"_
 
 
 
@@ -100,7 +106,7 @@ As example, the [RetroBrowser convention file](../../blob/master/conventions/ret
 // variable names are valid python variable names
 // variables are placeholders. They are keywords. Variable names are not freely chosen.
 structure {
-    app_dir: <app_dir>
+    app_dir: <app_name>
     controllers_dir: controllers
 }
 

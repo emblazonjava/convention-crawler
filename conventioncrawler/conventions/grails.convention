@@ -4,7 +4,7 @@ structure {
 }
 
 controller {
-    <controller_name>Controller.py
+    <controller_name>Controller.groovy
 }
 
 action {

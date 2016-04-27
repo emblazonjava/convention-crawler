@@ -1,5 +1,5 @@
 structure {
-    app_dir: <app_name>
+    app_dir: grails-app
     controllers_dir: controllers
 }
 
@@ -8,11 +8,16 @@ controller {
 }
 
 action {
-    def <action_name> (<A-Za-z0-9_,>):
+    def <action_name> (<A-Za-z0-9_,>) {
 }
 
 endpoint {
     controller_style: upper_camel_case
     endpoint_style: lower_camel_case
     endpoint: <controller_name>/<action_name>
+}
+
+structure {
+    app_dir: grails-app
+    controllers_dir: controllers
 }

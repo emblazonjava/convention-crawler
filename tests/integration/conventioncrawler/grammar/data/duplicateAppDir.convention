@@ -1,6 +1,7 @@
 structure {
     app_dir: <app_name>
     controllers_dir: controllers
+    app_dir: <app_name>
 }
 
 controller {

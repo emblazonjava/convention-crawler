@@ -1,7 +1,8 @@
 from os import listdir
 from os.path import isfile, join
-import conventioncrawler.grammar.lexicalanalysis as la
-import conventioncrawler.grammar.semanticanalysis as sa
+import conventioncrawler
+
+conventions_dir = conventioncrawler.__path__[0] + '/conventions'
 
 # Get list of filenames that are in the conventions/ directory
 def readSupportedConventionFilenames():
@@ -10,38 +11,30 @@ def readSupportedConventionFilenames():
     ['grails.convention', 'retroBrowser.convention']
     """
 
-    return [f for f in listdir('conventions/') if isfile(join('conventions', f))]
+    return [f for f in listdir(conventions_dir) if isfile(join(conventions_dir, f)) and f[-11:] == '.convention']
 
 
-# Return a list of tuples:
-# [ ('grails', 'grails.convention'), ('retroBrowser', 'retroBrowser.convention'), ... ]
 def calculateSupportedConventions(supported_convention_filenames):
     """
-    >>> calculateSupportedConventions(['grails.convention', 'retroBrowser.convention'])
-    [('grails', 'grails.convention'), ('retroBrowser', 'retroBrowser.convention')]
+    Return a dictionary of convention files
+
+    >>> conventions = calculateSupportedConventions(['grails.convention', 'retroBrowser.convention'])
+    >>> print (conventions['grails'])
+    conventions/grails.convention
+    >>> print (conventions['retroBrowser'])
+    conventions/retroBrowser.convention
     """
 
-    # Using a list comprehension to build the list of tuples... like 'collect' in groovy
-    return [_calculateConventionFromFilename(filename) for filename in supported_convention_filenames]
+    # Using a dict comprehension to build the dictionary... like 'collect' in groovy
+    return {_calculateConventionFromFilename(filename): (conventions_dir + '/' + filename) for filename in supported_convention_filenames}
 
 def _calculateConventionFromFilename(filename):
     """
     >>> _calculateConventionFromFilename('retroBrowser.convention')
-    ('retroBrowser', 'retroBrowser.convention')
+    'retroBrowser'
     """
 
-    return (filename.rstrip('.convention'), filename)
-
-
-def lexicalAnalysis(supported_conventions, app_name):
-
-    return {convention: la.tokenize(filename, app_name) for (convention, filename) in supported_conventions}
-
-# Call the validation stage
-def semanticAnalysis(tokenized_conventions):
-
-    pass
-    #return {convention: sa.generateIntermediateRepresentation(tokenized_file) for (convention, tokenized_file) in tokenized_conventions}
+    return filename.rstrip('.convention')
 
 
 if __name__ == '__main__':

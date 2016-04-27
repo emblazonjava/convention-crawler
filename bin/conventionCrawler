@@ -2,14 +2,20 @@
 
 import sys
 import argparse
-import conventioncrawler.convention as convention
+import conventioncrawler.crawler as crawlermod
+from os import listdir
 
 parser = argparse.ArgumentParser()
 parser.add_argument("convention", help="Specify the convention of your app. Currently supported conventions: grails and retroBrowser")
-parser.add_argument("-a, --app_name", type=string, help="app_name is required by some conventions as the directory name in which are located the model, view, and controller directories")
+parser.add_argument("-a", "--app_name", type=str, help="app_name is required by some conventions as the directory name in which are located the model, view, and controller directories")
 args = parser.parse_args()
 
-convention_intermediate_representations = convention.init(args.app_name)
+crawler = crawlermod.init(args.convention, args.app_name)
 
-# generate_endpoints returns a list of strings
-print(convention.generate_endpoints(args.convention))
+# If there is no app_dir in current directory, throw error
+# (This should be called from within the app directory)
+if crawler.intermediate_representation.structure.app_dir not in listdir('.'):
+    print ("ERROR: conventionCrawler should be run from within app directory")
+else:
+    # generate_endpoints returns a list of strings
+    print (crawler.generate_endpoints())
