@@ -1,3 +1,7 @@
+language {
+    groovy
+}
+
 structure {
     app_dir: grails-app
     controllers_dir: controllers
@@ -5,10 +9,6 @@ structure {
 
 controller {
     <controller_name>Controller.groovy
-}
-
-action {
-    def <action_name> (<A-Za-z0-9_,>) {
 }
 
 endpoint {

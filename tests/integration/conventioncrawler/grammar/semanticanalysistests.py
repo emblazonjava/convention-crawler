@@ -1,5 +1,6 @@
 import unittest
 import conventioncrawler.grammar.lexicalanalysis as la
+from conventioncrawler.grammar.conventiongrammar import ConventionGrammar
 
 class SemanticAnalysisTests(unittest.TestCase):
 
@@ -9,10 +10,12 @@ class SemanticAnalysisTests(unittest.TestCase):
 
     def test_intermediate_representation_validate(self):
 
+        parser = ConventionGrammar.parser({'app_name': 'tictactoe'})
+
         # Given
-        valid_intermediate_representation = la.tokenize(self.valid_convention_filename, 'tictactoe')
-        invalid_intermediate_representation1 = la.tokenize(self.invalid_convention_filename1, 'tictactoe')
-        invalid_intermediate_representation2 = la.tokenize(self.invalid_convention_filename2, 'tictactoe')
+        valid_intermediate_representation = la.tokenize(self.valid_convention_filename, parser)
+        invalid_intermediate_representation1 = la.tokenize(self.invalid_convention_filename1, parser)
+        invalid_intermediate_representation2 = la.tokenize(self.invalid_convention_filename2, parser)
 
         # Assertions
         self.assertTrue(valid_intermediate_representation.isValid())

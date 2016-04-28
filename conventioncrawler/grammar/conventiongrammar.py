@@ -318,6 +318,17 @@ class ControllerKeyword (m.Grammar):
 
     grammar = "controller"
 
+# HelloWorld
+class ControllerName (m.Grammar):
+    """
+    >>> myparser = ControllerName.parser()
+    >>> result = myparser.parse_string("HelloWorld")
+    >>> print (result.elements)
+    (WORD('A-Za-z0-9_')<'HelloWorld'>,)
+    """
+
+    grammar = m.WORD('A-Za-z0-9_')
+
 # <controller_name>Controller.py
 class ControllerConventionBody (m.Grammar):
     """
@@ -325,35 +336,15 @@ class ControllerConventionBody (m.Grammar):
     >>> result = myparser.parse_string("<controller_name>Controller.py")
     >>> print (result.elements)
     (ControllerNameVariable<'<', 'controller_name', '>'>, FileNameConstant<'Controller.py'>)
-    >>> result.controller_name_grammar.parser().parse_string('HelloController.groovy')
-    >>> print (result.controller_name_grammar)
-    (<Grammar[WORD('A-Za-z0-9_\\\-')]: WORD('A-Za-z0-9_\\\-', escapes=True)>, <Grammar: L('Controller.py')>)
+    >>> result.parser().parse_string('HelloController.py')
+    ControllerNameGrammar<'Hello', 'Controller.py'>
     """
 
     grammar = (ControllerNameVariable, FileNameConstant)
 
-    # class ControllerNameGrammar(m.Grammar):
-    #     pass
-
     def grammar_elem_init(self, sessiondata):
 
-        # ControllerNameGrammar.grammar = 3
-        # self.controller_name_grammar.grammar = (m.WORD('A-Za-z0-9_\-', escapes=True), m.LITERAL(self.get(FileNameConstant).string))
-        #self.ControllerNameGrammar.grammar = (m.WORD('A-Za-z0-9_\-', escapes=True), m.LITERAL(self.get(FileNameConstant).string))
-
-        #self.controller_name_grammar = ControllerNameGrammar
-        #self.controller_name_grammar = (m.WORD('A-Za-z0-9_\-', escapes=True), m.LITERAL(self.get(FileNameConstant).string))
-
-        # self.controller_name_grammar = self.ControllerNameGrammar()
-        # self.controller_name_grammar = (m.WORD('A-Za-z'), m.LITERAL('Controller.groovy'))
-
-        self.controller_name_grammar = type('ControllerNameGrammar', (m.Grammar,), dict(grammar=(m.WORD('A-Za-z0-9_\-', escapes=True), m.LITERAL(self.get(FileNameConstant).string))))
-        #self.ControllerNameGrammar.grammar = (m.WORD('A-Za-z'), m.LITERAL('Controller.groovy'))
-            # (m.WORD('A-Za-z0-9_', fullmatch=False), m.LITERAL(self.get(FileNameConstant).string))
-
-
-    # class ControllerNameGrammar(m.Grammar):
-    #     grammar = ''
+        self.controller_name_grammar = type('ControllerNameGrammar', (m.Grammar,), dict(grammar=(ControllerName, m.LITERAL(self.get(FileNameConstant).string))))
 
 
 
@@ -366,8 +357,8 @@ class ControllerConventionGrammar (m.Grammar):
     >>> result = myparser.parse_string("controller {\\n<controller_name>Controller.py\\n}")
     >>> print (result.elements)
     (ControllerKeyword<'controller'>, OpenCurlyBracket<'{'>, ControllerConventionBody<'<controller_name>', 'Controller.py'>, CloseCurlyBracket<'}'>)
-    >>> print (result.controller_name_grammar)
-    (<Grammar[WORD('A-Za-z0-9_\\\-')]: WORD('A-Za-z0-9_\\\-', escapes=True)>, <Grammar: L('Controller.py')>)
+    >>> print (result.controller_name_grammar.parser().parse_string('HelloController.py').elements)
+    (ControllerName<'Hello'>, L('Controller.py')<'Controller.py'>)
     """
 
     grammar = (ControllerKeyword, OpenCurlyBracket, ControllerConventionBody, CloseCurlyBracket)
@@ -377,56 +368,58 @@ class ControllerConventionGrammar (m.Grammar):
         self.controller_name_grammar = self.find(ControllerConventionBody).controller_name_grammar
 
 
-# ActionConventionGrammar
+# LanguageConventionGrammar
 
-# action
-class ActionKeyword (m.Grammar):
+# language
+class LanguageKeyword (m.Grammar):
     """
-    >>> myparser = ActionKeyword.parser()
-    >>> myparser.parse_string("action")
-    ActionKeyword<'action'>
-    """
-
-    grammar = "action"
-
-# TODO: Want to use REPEAT for a more dynamic function def
-# def <action_name> (<A-Za-z0-9_,>):
-class ActionConventionBody (m.Grammar):
-    """
-    >>> myparser = ActionConventionBody.parser()
-    >>> result = myparser.parse_string("def <action_name> (<A-Za-z0-9_,>):")
-    >>> print (result.elements)
-    (LanguageKeywordConstant<'def'>, ActionNameVariable<'<', 'action_name', '>'>, Parenthesis<'('>, AllowedCharsVariable<'<', 'A-Za-z0-9_,', '>'>, Parenthesis<')'>, Colon<':'>)
-    >>> print (result.action_grammar)
-    (<Grammar: L('def')>, <Grammar: WORD('A-Za-z0-9_')>, <Grammar: L('(')>, <Grammar: WORD('A-Za-z0-9_,')>, <Grammar: L(')')>, <Grammar: L(':')>)
+    >>> myparser = LanguageKeyword.parser()
+    >>> myparser.parse_string("language")
+    LanguageKeyword<'language'>
     """
 
-    grammar = (LanguageKeywordConstant, ActionNameVariable, Parenthesis, AllowedCharsVariable, Parenthesis, Colon | OpenCurlyBracket)
+    grammar = "language"
+
+# python
+class LanguageConstant (m.Grammar):
+    """
+    >>> myparser = LanguageConstant.parser()
+    >>> result = myparser.parse_string('python')
+    """
+
+    grammar = (m.LITERAL('python') | m.LITERAL('groovy'))
+
+# python
+class LanguageConventionBody (m.Grammar):
+    """
+    >>> myparser = LanguageConventionBody.parser()
+    >>> result = myparser.parse_string('python')
+    """
+    grammar = LanguageConstant
 
     def grammar_elem_init(self, sessiondata):
 
-        allowed_chars_regex = self.get(AllowedCharsVariable)[1].string
-        self.action_grammar = (m.LITERAL(self[0].string), m.WORD("A-Za-z0-9_"), m.LITERAL(self[2].string), m.WORD(allowed_chars_regex), m.LITERAL(self[4].string), m.LITERAL(self[5].string))
+        self.language = enums.Language[self.find(LanguageConstant).string]
 
-
-# action {
-#     def <action_name> (<A-Za-z0-9_,>):
+# language {
+#     python
 # }
-class ActionConventionGrammar (m.Grammar):
+class LanguageConventionGrammar (m.Grammar):
     """
-    >>> myparser = ActionConventionGrammar.parser()
-    >>> result = myparser.parse_string("action {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}")
+    >>> myparser = LanguageConventionGrammar.parser()
+    >>> result = myparser.parse_string("language {\\npython\\n}")
     >>> print (result.elements)
-    (ActionKeyword<'action'>, OpenCurlyBracket<'{'>, ActionConventionBody<'def', '<action_name>', '(', '<A-Za-z0-9_,>', ')', ':'>, CloseCurlyBracket<'}'>)
-    >>> print (result.action_grammar)
-    (<Grammar: L('def')>, <Grammar: WORD('A-Za-z0-9_')>, <Grammar: L('(')>, <Grammar: WORD('A-Za-z0-9_,')>, <Grammar: L(')')>, <Grammar: L(':')>)
+    (LanguageKeyword<'language'>, OpenCurlyBracket<'{'>, LanguageConventionBody<'python'>, CloseCurlyBracket<'}'>)
+    >>> print (result.language)
+    Language.python
     """
 
-    grammar = (ActionKeyword, OpenCurlyBracket, ActionConventionBody, CloseCurlyBracket)
+    grammar = (LanguageKeyword, OpenCurlyBracket, LanguageConventionBody, CloseCurlyBracket)
 
     def grammar_elem_init(self, sessiondata):
 
-        self.action_grammar = self.find(ActionConventionBody).action_grammar
+        self.language = self.get(LanguageConventionBody).language
+
 
 # EndpointConventionGrammar
 
@@ -599,6 +592,11 @@ class EndpointConventionGrammar (m.Grammar):
 
 # Because I've used REPEAT, there could be multiple occurrences of each grammar
 # A cleanup phase will have to ensure there is one and only one of each of Structure, Controller, Action, and Endpoint
+#
+# language {
+#     python
+# }
+#
 # structure {
 #     app_dir: <app_name>
 #     controllers_dir: controllers
@@ -606,10 +604,6 @@ class EndpointConventionGrammar (m.Grammar):
 #
 # controller {
 #     <controller_name>Controller.py
-# }
-#
-# action {
-#     def <action_name> (<A-Za-z0-9_,>):
 # }
 #
 # endpoint {
@@ -620,34 +614,34 @@ class EndpointConventionGrammar (m.Grammar):
 class ConventionGrammar (m.Grammar):
     """
     >>> myparser = ConventionGrammar.parser({'app_name': 'tictactoe'})
-    >>> result1 = myparser.parse_string("structure {\\ncontrollers_dir: controllers\\napp_dir: <app_name>}\\n\\ncontroller {\\n<controller_name>Controller.py\\n}\\n\\naction {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}\\n\\nendpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}")
+    >>> result1 = myparser.parse_string("language {\\npython\\n}\\n\\nstructure {\\ncontrollers_dir: controllers\\napp_dir: <app_name>}\\n\\ncontroller {\\n<controller_name>Controller.py\\n}\\n\\nendpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}")
     >>> print (result1.elements)
-    (<REPEAT><'structure {\\ncontrollers_dir: controllers\\napp_dir: <app_name>}', 'controller {\\n<controller_name>Controller.py\\n}', 'action {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}', 'endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}'>,)
+    (<REPEAT><'language {\\npython\\n}', 'structure {\\ncontrollers_dir: controllers\\napp_dir: <app_name>}', 'controller {\\n<controller_name>Controller.py\\n}', 'endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}'>,)
     >>> print (result1.structure.app_dir)
     tictactoe
     >>> print (result1.structure.controllers_dir)
     controllers
-    >>> print (result1.controller.controller_name_grammar)
-    (<Grammar[WORD('A-Za-z0-9_\\\-')]: WORD('A-Za-z0-9_\\\-', escapes=True)>, <Grammar: L('Controller.py')>)
-    >>> print (result1.action.action_grammar)
-    (<Grammar: L('def')>, <Grammar: WORD('A-Za-z0-9_')>, <Grammar: L('(')>, <Grammar: WORD('A-Za-z0-9_,')>, <Grammar: L(')')>, <Grammar: L(':')>)
+    >>> print (result1.controller.controller_name_grammar.parser().parse_string('HelloController.py').elements)
+    (ControllerName<'Hello'>, L('Controller.py')<'Controller.py'>)
+    >>> print (result1.language.language)
+    Language.python
     >>> print (result1.endpoint.controller_style)
     CaseStyle.upper_camel_case
     >>> print (result1.endpoint.endpoint_style)
     CaseStyle.lower_camel_case
     >>> print (result1.endpoint.endpoint_template)
     ['controller_name', '/', 'action_name']
-    >>> result2 = myparser.parse_string("controller {\\n<controller_name>Controller.py\\n}\\n\\nstructure {\\ncontrollers_dir: controllers\\napp_dir: <app_name>}\\n\\naction {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}\\n\\nendpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}")
+    >>> result2 = myparser.parse_string("language {\\npython\\n}\\n\\ncontroller {\\n<controller_name>Controller.py\\n}\\n\\nstructure {\\ncontrollers_dir: controllers\\napp_dir: <app_name>}\\n\\nendpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}")
     >>> print (result2.elements)
-    (<REPEAT><'controller {\\n<controller_name>Controller.py\\n}', 'structure {\\ncontrollers_dir: controllers\\napp_dir: <app_name>}', 'action {\\ndef <action_name> (<A-Za-z0-9_,>):\\n}', 'endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}'>,)
+    (<REPEAT><'language {\\npython\\n}', 'controller {\\n<controller_name>Controller.py\\n}', 'structure {\\ncontrollers_dir: controllers\\napp_dir: <app_name>}', 'endpoint {\\ncontroller_style: upper_camel_case\\nendpoint_style: lower_camel_case\\nendpoint: <controller_name>/<action_name>\\n}'>,)
     >>> print (result2.structure.app_dir)
     tictactoe
     >>> print (result2.structure.controllers_dir)
     controllers
-    >>> print (result2.controller.controller_name_grammar)
-    (<Grammar[WORD('A-Za-z0-9_\\\-')]: WORD('A-Za-z0-9_\\\-', escapes=True)>, <Grammar: L('Controller.py')>)
-    >>> print (result2.action.action_grammar)
-    (<Grammar: L('def')>, <Grammar: WORD('A-Za-z0-9_')>, <Grammar: L('(')>, <Grammar: WORD('A-Za-z0-9_,')>, <Grammar: L(')')>, <Grammar: L(':')>)
+    >>> print (result2.controller.controller_name_grammar.parser().parse_string('HelloController.py').elements)
+    (ControllerName<'Hello'>, L('Controller.py')<'Controller.py'>)
+    >>> print (result2.language.language)
+    Language.python
     >>> print (result2.endpoint.controller_style)
     CaseStyle.upper_camel_case
     >>> print (result2.endpoint.endpoint_style)
@@ -656,13 +650,13 @@ class ConventionGrammar (m.Grammar):
     ['controller_name', '/', 'action_name']
     """
 
-    grammar = m.REPEAT(StructureConventionGrammar | ControllerConventionGrammar | ActionConventionGrammar | EndpointConventionGrammar)
+    grammar = m.REPEAT(StructureConventionGrammar | ControllerConventionGrammar | LanguageConventionGrammar | EndpointConventionGrammar)
 
     def grammar_elem_init(self, sessiondata):
 
         self.structure = self.find(StructureConventionGrammar)
         self.controller = self.find(ControllerConventionGrammar)
-        self.action = self.find(ActionConventionGrammar)
+        self.language = self.find(LanguageConventionGrammar)
         self.endpoint = self.find(EndpointConventionGrammar)
 
     def isValid(self):
@@ -675,7 +669,7 @@ class ConventionGrammar (m.Grammar):
 
         return (len(self.find_all(StructureConventionGrammar)) <= 1 and
                 len(self.find_all(ControllerConventionGrammar)) <= 1 and
-                len(self.find_all(ActionConventionGrammar)) <= 1 and
+                len(self.find_all(LanguageConventionGrammar)) <= 1 and
                 len(self.find_all(EndpointConventionGrammar)) <= 1 and
                 len(self.find_all(AppDirConvention)) <= 1 and
                 len(self.find_all(ControllersDirConvention)) <= 1 and
@@ -691,6 +685,10 @@ if __name__ == '__main__':
     doctest.testmod()
 
     convention = """
+    language {
+        python
+    }
+
     structure {
         app_dir: <app_name>
         controllers_dir: controllers
@@ -698,10 +696,6 @@ if __name__ == '__main__':
 
     controller {
         <controller_name>Controller.py
-    }
-
-    action {
-        def <action_name> (<A-Za-z0-9_,>):
     }
 
     endpoint {

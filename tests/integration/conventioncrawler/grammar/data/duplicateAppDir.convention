@@ -1,3 +1,7 @@
+language {
+    python
+}
+
 structure {
     app_dir: <app_name>
     controllers_dir: controllers
@@ -6,10 +10,6 @@ structure {
 
 controller {
     <controller_name>Controller.py
-}
-
-action {
-    def <action_name> (<A-Za-z0-9_,>):
 }
 
 endpoint {

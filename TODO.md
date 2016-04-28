@@ -1,11 +1,6 @@
 ##TODO
 
-* Fix unit/integration tests for controller_name_grammar
-* Design functionality to take convention IR to grammar that finds action names
-  * parse controller to find actions names
-* Design functionality to compute endpoints from controller/action set
-  * convert endpoint case style
-    * Define grammar that converts different case styles into list of "words"
+* Implement rails.convention
 
 ##Completed
 
@@ -28,4 +23,13 @@
 * Write functional tests for convention.init
 * write conventionCrawler script
 * Design functionality to take IR to crawler that finds controller classes
+* Design functionality to take convention IR to grammar that finds action names
+  * Write GroovyActionGrammar and PythonActionGrammar
+  * parse controller to find actions names
+  * weed out function names of the form __init__
+  * Return as list of tuples (controller_name, [action_name1, action_name2, ... ])
+* Design functionality to compute endpoints from controller/action set
+  * convert endpoint case style
+    * Define grammar that converts different case styles into list of "words"
+    * Define grammar_elem_init to return lower case of component words
 

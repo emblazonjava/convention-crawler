@@ -1,30 +1,9 @@
-_ConventionCrawler is currently under development._
-
-_Status:_
-* _Convention Grammar Fully Implemented_
-* _Unit, Integration, and Functional tests implemented for current functionality_
-* _CLI implemented, command-line script working_
-* _Crawls a grails or retroBrowser app to find names of controller files_
-
-
-_Next Steps:_
-* _Fix unit/integration tests for controller_name_grammar_
-* _Design functionality to take convention IR to grammar that finds action names_
-  * _parse controller to find actions names_
-* _Design functionality to compute endpoints from controller/action set_
-  * _convert endpoint case style_
-    * _Define grammar that converts different case styles into list of "words"_
-
-
-
-_See [TODO](../../blob/master/TODO.md/) for upcoming features._
-
 #Introduction
 
 ConventionCrawler is a tool for crawling a convention-over-configuration application and extracting knowledge
 about its structure.
 
-In its current iteration, it extracts Controller and action names from Model-View-Controller applications.
+In its current iteration, it generates valid endpoints for Model-View-Controller applications.
 
 It can be used as a command line util to generate a file containing the list of fully qualified Controller class
 names along with their public actions, or added as a package to another Python app to generate that data as a
@@ -105,6 +84,11 @@ As example, the [RetroBrowser convention file](../../blob/master/conventions/ret
 // variable names are in angle brackets, < >
 // variable names are valid python variable names
 // variables are placeholders. They are keywords. Variable names are not freely chosen.
+
+language {
+    python
+}
+
 structure {
     app_dir: <app_name>
     controllers_dir: controllers
@@ -112,10 +96,6 @@ structure {
 
 controller {
     <controller_name>Controller.py
-}
-
-action {
-    def <action_name> (<A-Za-z0-9_,>):
 }
 
 // All the keywords are valid python variable names
