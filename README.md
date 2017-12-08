@@ -1,4 +1,4 @@
-#Introduction
+# Introduction
 
 ConventionCrawler is a tool for crawling a convention-over-configuration application and extracting knowledge
 about its structure.
@@ -9,7 +9,7 @@ It can be used as a command line util to generate a file containing the list of 
 names along with their public actions, or added as a package to another Python app to generate that data as a
 List of Strings.
 
-#Usage
+# Usage
 
 As a command-line app, ConventionCrawler should be run from within the base of the app it is to crawl.
 
@@ -25,7 +25,7 @@ Sample Usage:
 
 `conventionCrawler retroBrowser -a tictactoe`
 
-#Installation
+# Installation
 
 This is a Python 3 application and requires version 3.2 or greater.
 
@@ -36,14 +36,14 @@ From within the downloaded repository, run:
 
 `python3 setup.py install`
 
-#Example Usage
+# Example Usage
 
-###Web-app Security
+### Web-app Security
 
 [RetroBrowser](https://github.com/allisonf/retro-browser) will use ConventionCrawler as a mechanism to build a 
 whitelist for validating URL endpoints.
 
-#Set of Supported Frameworks
+# Set of Supported Frameworks
 
 * [RetroBrowser](https://github.com/allisonf/retro-browser)
 * [Grails](https://grails.org)
@@ -71,7 +71,7 @@ The value for the `<convention>` parameter should be the first part of the conve
 | RetroBrowser | retroBrowser | retroBrowser.convention |
 | Grails       | grails       | grails.convention       |
 
-#<a name="convention-files">Convention Files</a>  
+# <a name="convention-files">Convention Files</a>  
 
 Convention Files are named `<framework>.convention` and live in the `conventions` directory at the base
 of this project. Convention filenames are the lowerCamelCase form of the framework they describe. See the table in

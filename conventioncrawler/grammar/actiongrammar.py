@@ -8,7 +8,7 @@ class ActionName (m.Grammar):
 
 class GroovyActionGrammar (m.Grammar):
 
-        grammar = (m.LITERAL('def'), ActionName, m.LITERAL('('), m.OPTIONAL(m.REPEAT(m.WORD('A-Za-z0-9_){='))))
+        grammar = (m.OPTIONAL(m.LITERAL('public')), m.LITERAL('def'), ActionName, m.LITERAL('('), m.OPTIONAL(m.REPEAT(m.WORD('A-Za-z0-9_){='))))
 
 class PythonSpecialFunctionName (m.Grammar):
 
